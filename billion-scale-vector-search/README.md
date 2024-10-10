@@ -2,9 +2,9 @@
 <!-- Copyright Vespa.ai. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root.-->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://vespa.ai/assets/vespa-ai-logo-heather.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://vespa.ai/assets/vespa-ai-logo-rock.svg">
-  <img alt="#Vespa" width="200" src="https://vespa.ai/assets/vespa-ai-logo-rock.svg" style="margin-bottom: 25px;">
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.vespa.ai/logos/Vespa-logo-green-RGB.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg">
+  <img alt="#Vespa" width="200" src="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg" style="margin-bottom: 25px;">
 </picture>
 
 # SPANN Billion Scale Vector Search 
@@ -85,7 +85,7 @@ It uses the first 10M vectors of the 100M slice sample.
 This sample file is about 1GB (10M vectors):
 <pre data-test="exec">
 $ curl -L -o spacev10m_base.i8bin \
-  https://data.vespa.oath.cloud/sample-apps-data/spacev10m_base.i8bin
+  https://data.vespa-cloud.com/sample-apps-data/spacev10m_base.i8bin
 </pre>
 
 Generate the feed file for the first 10M vectors from the 100M sample. 
@@ -141,7 +141,7 @@ Download the query vectors and the ground truth for the 10M first vectors:
 $ curl -L -o query.i8bin \
   https://github.com/microsoft/SPTAG/raw/main/datasets/SPACEV1B/query.bin
 $ curl -L -o spacev10m_gt100.i8bin \
-  https://data.vespa.oath.cloud/sample-apps-data/spacev10m_gt100.i8bin
+  https://data.vespa-cloud.com/sample-apps-data/spacev10m_gt100.i8bin
 </pre>
 
 Note, initially, the routine above used the query file from https://comp21storage.blob.core.windows.net/publiccontainer/comp21/spacev1b/query.i8bin

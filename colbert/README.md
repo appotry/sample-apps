@@ -2,9 +2,9 @@
 <!-- Copyright Yahoo. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root. -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://vespa.ai/assets/vespa-ai-logo-heather.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://vespa.ai/assets/vespa-ai-logo-rock.svg">
-  <img alt="#Vespa" width="200" src="https://vespa.ai/assets/vespa-ai-logo-rock.svg" style="margin-bottom: 25px;">
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.vespa.ai/logos/Vespa-logo-green-RGB.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg">
+  <img alt="#Vespa" width="200" src="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg" style="margin-bottom: 25px;">
 </picture>
 
 # Vespa sample applications - Simple hybrid search with ColBERT
@@ -52,6 +52,40 @@ vespa query 'yql=select * from doc where userQuery() or ({targetHits: 100}neares
  'query=exchanging information by sound'
  </pre>
 
+
+### Export ColBERT models from HF 
+See the [model2onnx.py](model2onnx.py) script for exporting the ColBERT model from Hugging Face to ONNX format. 
+
+Notice that these three models use different embedding dimensionality.
+
+Example usage:
+
+#### https://huggingface.co/answerdotai/answerai-colbert-small-v1
+
+This is the recommended colbert model for this application as it is optimized for speed and accuracy. See [blog post](https://blog.vespa.ai/introducing-answerai-colbert-small/)
+
+```bash
+python3 model2onnx.py --hf_model answerdotai/answerai-colbert-small-v1 --dims 96 
+```
+Can be used with:
+```
+field colbert type tensor<int8>(dt{}, x[12])
+```
+
+
+#### https://huggingface.co/mixedbread-ai/mxbai-colbert-large-v1
+```bash
+python3 model2onnx.py --hf_model mixedbread-ai/mxbai-colbert-large-v1 --dims 128 
+```
+
+### https://huggingface.co/vespa-engine/col-minilm
+```bash
+python3 model2onnx.py --hf_model vespa-engine/col-minilm --dims 32 
+```
+Can be used with:
+```
+field colbert type tensor<int8>(dt{}, x[4])
+```
 
 ### Terminate container 
 
