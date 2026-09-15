@@ -1,0 +1,257 @@
+schema doc {
+
+    document doc {
+        field id type string {
+            indexing: summary | attribute
+        }
+
+        field title type string {
+            indexing: summary | index
+        }
+
+        field body type string {
+            indexing: summary | index
+            index: enable-bm25
+        }
+    }
+
+    fieldset default {
+        fields: body
+    }
+
+    # ---------------------------------------------------------------------------
+    # Variant 1: Simple sigmoid (Platt scaling)
+    #
+    # Maps raw BM25 score to [0,1] via sigmoid. No prior.
+    #   L(s) = sigmoid(alpha * (s - beta))
+    #
+    # Parameters:
+    #   alpha  -- sigmoid steepness; set to 1/std(bm25_scores). Default 1.0.
+    #   beta   -- sigmoid midpoint; set to median(bm25_scores). Default 3.0.
+    # ---------------------------------------------------------------------------
+    rank-profile bayesian_bm25_simple {
+        inputs {
+            query(alpha) double: 1.0
+            query(beta)  double: 3.0
+        }
+
+        function raw_bm25() {
+            expression: bm25(body)
+        }
+
+        function likelihood() {
+            expression: sigmoid(query(alpha) * (raw_bm25() - query(beta)))
+        }
+
+        first-phase {
+            expression: likelihood()
+        }
+
+        summary-features {
+            raw_bm25
+            likelihood
+        }
+    }
+
+    # ---------------------------------------------------------------------------
+    # Variant 2: Full Bayesian posterior (recommended)
+    #
+    # Adds a composite prior from term frequency and field length normalization
+    # (paper Section 4.2), then combines with the sigmoid likelihood via
+    # Bayes' rule to produce a calibrated posterior probability.
+    #
+    # TF prior uses foreach to average per-term occurrences, avoiding the bias
+    # of aggregate matchCount which inflates the prior for longer queries.
+    # ---------------------------------------------------------------------------
+    rank-profile bayesian_bm25 {
+        inputs {
+            query(alpha)         double: 1.0
+            query(beta)          double: 3.0
+        }
+
+        function raw_bm25() {
+            expression: bm25(body)
+        }
+
+        function likelihood() {
+            expression: sigmoid(query(alpha) * (raw_bm25() - query(beta)))
+        }
+
+        # Average per-term TF across query terms (via foreach over term indices)
+        function avg_tf() {
+            expression: foreach(terms, x, fieldTermMatch(body, x).occurrences, true, average)
+        }
+
+        # Eq. 25: P_tf(f) = 0.2 + 0.7 * min(1, f/10)
+        function tf_prior() {
+            expression: 0.2 + 0.7 * min(1, avg_tf() / 10)
+        }
+
+        # Eq. 26: P_norm(n) = 0.3 + 0.6 * (1 - min(1, |n - 0.5| * 2))
+        #         where n = fieldLength / avgFieldLen
+        function fieldnorm_prior() {
+            expression: 0.3 + 0.6 * (1 - min(1, fabs(fieldLength(body) / averageFieldLength(body) - 0.5) * 2))
+        }
+
+        # Eq. 27: P_prior = clamp(0.7 * P_tf + 0.3 * P_norm, 0.1, 0.9)
+        function composite_prior() {
+            expression: max(0.1, min(0.9, 0.7 * tf_prior() + 0.3 * fieldnorm_prior()))
+        }
+
+        # P(R|s) = (L * prior) / (L * prior + (1-L) * (1-prior))
+        function posterior() {
+            expression {
+                (likelihood() * composite_prior())
+                /
+                (likelihood() * composite_prior() + (1 - likelihood()) * (1 - composite_prior()))
+            }
+        }
+
+        first-phase {
+            expression: posterior()
+        }
+
+        summary-features {
+            raw_bm25
+            likelihood
+            avg_tf
+            tf_prior
+            fieldnorm_prior
+            composite_prior
+            posterior
+            fieldLength(body)
+            matchCount(body)
+            averageFieldLength(body)
+        }
+    }
+
+    # ---------------------------------------------------------------------------
+    # Variant 3: With base rate calibration (paper Section 4.4)
+    #
+    # Adds a second Bayes update with a corpus-level base rate prior.
+    # This corrects overconfidence when beta = median(scores), reducing
+    # Expected Calibration Error by 68-77% without relevance labels.
+    #
+    # Additional parameter:
+    #   base_rate -- fraction of documents relevant to a random query.
+    #                Estimate via 95th-percentile method (Algorithm 4.4.7)
+    #                or set empirically. Default 0.05.
+    # ---------------------------------------------------------------------------
+    rank-profile bayesian_bm25_calibrated inherits bayesian_bm25 {
+        inputs {
+            query(base_rate) double: 0.05
+        }
+
+        # Second Bayes update: P_final = (P * br) / (P * br + (1-P) * (1-br))
+        function calibrated_posterior() {
+            expression {
+                (posterior() * query(base_rate))
+                /
+                (posterior() * query(base_rate) + (1 - posterior()) * (1 - query(base_rate)))
+            }
+        }
+
+        first-phase {
+            expression: calibrated_posterior()
+        }
+
+        summary-features {
+            raw_bm25
+            likelihood
+            avg_tf
+            tf_prior
+            fieldnorm_prior
+            composite_prior
+            posterior
+            calibrated_posterior
+            fieldLength(body)
+            averageFieldLength(body)
+            matchCount(body)
+        }
+    }
+
+    # ---------------------------------------------------------------------------
+    # Variant 4: Log-odds posterior (no base-rate calibration)
+    #
+    # from the paper: https://doi.org/10.5281/zenodo.18512411
+    #
+    # Reformulates the Bayesian update in log-odds space. Sequential Bayesian
+    # updates are additive in log-odds (paper Section 4), so each evidence term
+    # contributes independently — no explicit prior weighting (0.7/0.3) or
+    # clamping (0.1/0.9) is needed.
+    #
+    # The tf_prior and fieldnorm_prior inherited from bayesian_bm25 are bounded
+    # to [0.2, 0.9] and [0.3, 0.9] respectively, so log(p/(1-p)) is ok.
+    #
+    # Same inputs as bayesian_bm25.
+    # ---------------------------------------------------------------------------
+    rank-profile bayesian_bm25_logodds inherits bayesian_bm25 {
+
+        # logit(L) collapses to the linear pre-activation by logit-sigmoid duality
+        function logit_likelihood() {
+            expression: query(alpha) * (raw_bm25() - query(beta))
+        }
+
+        function logit_tf_prior() {
+            expression: log(tf_prior() / (1 - tf_prior()))
+        }
+
+        function logit_fieldnorm_prior() {
+            expression: log(fieldnorm_prior() / (1 - fieldnorm_prior()))
+        }
+
+        first-phase {
+            expression: sigmoid(logit_likelihood() + logit_tf_prior() + logit_fieldnorm_prior())
+        }
+
+        summary-features {
+            raw_bm25
+            logit_likelihood
+            avg_tf
+            tf_prior
+            fieldnorm_prior
+            logit_tf_prior
+            logit_fieldnorm_prior
+            fieldLength(body)
+            averageFieldLength(body)
+        }
+    }
+
+    # ---------------------------------------------------------------------------
+    # Variant 5: Log-odds posterior with base-rate calibration
+    #
+    # Adds the corpus-level base rate as one more additive log-odds term.
+    #
+    # Additional parameter:
+    #   base_rate -- fraction of documents relevant to a random query.
+    #                Same as in Variant 3.
+    # ---------------------------------------------------------------------------
+    rank-profile bayesian_bm25_logodds_calibrated inherits bayesian_bm25_logodds {
+        inputs {
+            query(base_rate) double: 0.05
+        }
+
+        first-phase {
+            expression {
+                sigmoid(
+                    logit_likelihood()
+                    + logit_tf_prior()
+                    + logit_fieldnorm_prior()
+                    + log(query(base_rate) / (1 - query(base_rate)))
+                )
+            }
+        }
+
+        summary-features {
+            raw_bm25
+            logit_likelihood
+            avg_tf
+            tf_prior
+            fieldnorm_prior
+            logit_tf_prior
+            logit_fieldnorm_prior
+            fieldLength(body)
+            averageFieldLength(body)
+        }
+    }
+}

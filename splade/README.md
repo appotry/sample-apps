@@ -1,10 +1,10 @@
 
-<!-- Copyright Yahoo. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root. -->
+<!-- Copyright Vespa.ai. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root. -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://vespa.ai/assets/vespa-ai-logo-heather.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://vespa.ai/assets/vespa-ai-logo-rock.svg">
-  <img alt="#Vespa" width="200" src="https://vespa.ai/assets/vespa-ai-logo-rock.svg" style="margin-bottom: 25px;">
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.vespa.ai/logos/Vespa-logo-green-RGB.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg">
+  <img alt="#Vespa" width="200" src="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg" style="margin-bottom: 25px;">
 </picture>
 
 # Vespa sample applications - Simple hybrid search with SPLADE
@@ -35,7 +35,7 @@ Requires at least Vespa 8.320.68
 
 ## To try this application
 
-Follow [Vespa getting started](https://cloud.vespa.ai/en/getting-started)
+Follow [Vespa getting started](https://docs.vespa.ai/en/basics/deploy-an-application)
 through the <code>vespa deploy</code> step, cloning `splade` instead of `album-recommendation`.
 
 
@@ -115,7 +115,7 @@ Which will produce the following hit output
 }
 ```
 
-The `rank-profile` used here is `default`, specified in the [schemas/doc.sd](schemas/doc.sd) file. 
+The `rank-profile` used here is `default`, specified in the [schemas/doc.sd](app/schemas/doc.sd) file. 
 
 It includes a [match-features](https://docs.vespa.ai/en/reference/schema-reference.html#match-features) configuration
 specifying tensor and rank-features we want to return with each hit. We have:
@@ -196,6 +196,6 @@ $ find models/ -type f ! -name 'model.onnx' ! -name 'tokenizer.json' | xargs rm
 #### Terminate container 
 
 This is only relevant when running this sample application locally. Remove the container after use:
-<pre data-test="exec">
+<pre data-test="after">
 $ docker rm -f vespa
 </pre>

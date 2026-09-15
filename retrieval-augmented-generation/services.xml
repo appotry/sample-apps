@@ -6,14 +6,22 @@
 
     <document-api/>
 
-    <!-- Setup the client to OpenAI -->
-    <component id="openai" class="ai.vespa.llm.clients.OpenAI" />
+    <secrets>
+      <openai-api-key vault="my-vault-name" name="my-secret-name"/>
+    </secrets>
 
-    <!-- Setup a local inference on a Mistral 7B model -->
+    <!-- Setup the client to OpenAI -->
+    <component id="openai" class="ai.vespa.llm.clients.OpenAI">
+      <config name = "ai.vespa.llm.clients.llm-client">
+        <apiKeySecretName>openai-api-key</apiKeySecretName>
+      </config>
+    </component>
+
+    <!-- Setup a local inference on a small Llama 3.2 text model -->
     <!-- Comment out this component to avoid downloading the model file during startup -->
-    <component id="mistral" class="ai.vespa.llm.clients.LocalLLM">
+    <component id="phi" class="ai.vespa.llm.clients.LocalLLM">
       <config name="ai.vespa.llm.clients.llm-local-client">
-        <model url="https://data.vespa.oath.cloud/gguf_models/Phi-3-mini-4k-instruct-q4.gguf" />
+        <model url="https://data.vespa-cloud.com/gguf_models/llama-3.2-1b-instruct-q8_0.gguf" />
         <contextSize>4096</contextSize>
         <parallelRequests>1</parallelRequests>
       </config>
@@ -32,7 +40,7 @@
       <chain id="local" inherits="vespa">
         <searcher id="ai.vespa.search.llm.RAGSearcher">
           <config name="ai.vespa.search.llm.llm-searcher">
-            <providerId>mistral</providerId>
+            <providerId>phi</providerId>
           </config>
         </searcher>
       </chain>

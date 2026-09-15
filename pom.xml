@@ -11,14 +11,19 @@
         Modules must be included here to have their 'vespa_version' property updated automatically.</description>
 
     <modules>
-        <module>album-recommendation-java</module>
-        <module>billion-scale-image-search</module>
-        <module>billion-scale-vector-search</module>
+        <module>album-recommendation-java/app</module>
+        <module>billion-scale-image-search/app</module>
+        <module>billion-scale-vector-search/app</module>
         <module>examples/document-processing</module>
         <module>examples/embedding-service</module>
         <module>examples/generic-request-processing</module>
         <module>examples/http-api-using-request-handlers-and-processors</module>
         <module>examples/joins</module>
+        <module>examples/linguistics-asia/02-lucene-per-variant</module>
+        <module>examples/linguistics-asia/03-lucene-icu</module>
+        <module>examples/linguistics-asia/06-opennlp-icu</module>
+        <module>examples/linguistics-asia/07-opennlp-opencc</module>
+        <module>examples/linguistics-asia/08-lucene-phrase-dict</module>
         <module>examples/lucene-linguistics/advanced-configuration</module>
         <module>examples/lucene-linguistics/going-crazy</module>
         <module>examples/lucene-linguistics/minimal</module>

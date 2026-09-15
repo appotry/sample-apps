@@ -2,9 +2,9 @@
 <!-- Copyright Vespa.ai. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root. -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://vespa.ai/assets/vespa-ai-logo-heather.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://vespa.ai/assets/vespa-ai-logo-rock.svg">
-  <img alt="#Vespa" width="200" src="https://vespa.ai/assets/vespa-ai-logo-rock.svg" style="margin-bottom: 25px;">
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.vespa.ai/logos/Vespa-logo-green-RGB.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg">
+  <img alt="#Vespa" width="200" src="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg" style="margin-bottom: 25px;">
 </picture>
 
 # Vespa sample applications - operations
@@ -19,8 +19,12 @@ Use the AWS multinode quick-start guides in [getting started](https://docs.vespa
 See [vespa.ai/support](https://vespa.ai/support) for how to get help / FAQ / Stack Overflow.
 [Admin procedures](https://docs.vespa.ai/en/operations/admin-procedures.html) can be a good read, too.
 
-## Multinode applications
+## CI/CD
+Refer to the examples at [CI/CD](CI-CD/)
+for how to add continuous integration and continuous delivery/deployment tests to an application.
 
+
+## Multinode applications
 
 ### Multinode
 The [Multinode](multinode/) application sets up a three-node application and experiment with node start/stop.

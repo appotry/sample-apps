@@ -1,55 +1,62 @@
 <!-- Copyright Vespa.ai. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root.-->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://vespa.ai/assets/vespa-ai-logo-heather.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://vespa.ai/assets/vespa-ai-logo-rock.svg">
-  <img alt="#Vespa" width="200" src="https://vespa.ai/assets/vespa-ai-logo-rock.svg" style="margin-bottom: 25px;">
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.vespa.ai/logos/Vespa-logo-green-RGB.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg">
+  <img alt="#Vespa" width="200" src="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg" style="margin-bottom: 25px;">
 </picture>
 
-# MS Marco Passage Ranking  
+# MS Marco Passage Ranking
 
-This sample application demonstrates how to efficiently represent three ways of applying Transformer-based ranking 
-models for text ranking in Vespa.
 
-Blog posts with more details:
+## Short description
+MS Marco Passage Ranking demonstrates how to efficiently represent three ways of applying Transformer-based ranking
+models for text ranking in Vespa:
+Dense vector search retrieval, re-ranking using a cross-encoder and re-ranking using ColBERT.
 
+
+## Features
+- Simple single-stage sparse retrieval accelerated by the
+  [WAND](https://docs.vespa.ai/en/using-wand-with-vespa.html)
+  dynamic pruning algorithm with [BM25](https://docs.vespa.ai/en/reference/bm25.html) ranking.
+- Dense (vector) search retrieval for efficient candidate retrieval
+  using Vespa's support for [approximate nearest neighbor search](https://docs.vespa.ai/en/approximate-nn-hnsw.html).
+- Re-ranking using a *cross-encoder* with cross attention between the query and document terms.
+- Re-ranking using the [Late contextual interaction over BERT (ColBERT)](https://arxiv.org/abs/2004.12832) model.
+- [Multiphase retrieval and ranking](https://docs.vespa.ai/en/phased-ranking.html)
+  combining efficient retrieval (WAND or ANN) with re-ranking stages.
+- Using Vespa [embedder](https://docs.vespa.ai/en/embedding.html) functionality.
+- Hybrid ranking functionality
+
+
+## Transformers for Ranking
+![Colbert overview](img/colbert_illustration.png)
+
+*Illustration from [ColBERT paper](https://arxiv.org/abs/2004.12832)*.
+
+From the feature list above:
+- Dense (vector) search retrieval for efficient candidate retrieval
+  is illustrated in figure **a**.
+- Re-ranking using a *cross-encoder* with cross attention between the query and document terms
+  is illustrated in figure **c**.
+- Re-ranking using the [Late contextual interaction over BERT (ColBERT)](https://arxiv.org/abs/2004.12832) model
+  is illustrated in figure **d**.
+
+To use this sample application to the best, find more details in the blog posts:
 - [Post one: Introduction to neural ranking and the MS Marco passage ranking dataset](https://blog.vespa.ai/pretrained-transformer-language-models-for-search-part-1/).
 - [Post two: Efficient retrievers, sparse, dense, and hybrid retrievers](https://blog.vespa.ai/pretrained-transformer-language-models-for-search-part-2/).
 - [Post three: Re-ranking using multi-representation models (ColBERT)](https://blog.vespa.ai/pretrained-transformer-language-models-for-search-part-3/).
 - [Post four: Re-ranking using cross-encoders](https://blog.vespa.ai/pretrained-transformer-language-models-for-search-part-4/).
 
 
-## Transformers for Ranking 
-![Colbert overview](img/colbert_illustration.png)
-
-*Illustration from [ColBERT paper](https://arxiv.org/abs/2004.12832)*.
-
-This sample application demonstrates:
-
-- Simple single-stage sparse retrieval accelerated by the
-  [WAND](https://docs.vespa.ai/en/using-wand-with-vespa.html)
-  dynamic pruning algorithm with [BM25](https://docs.vespa.ai/en/reference/bm25.html) ranking.  
-- Dense (vector) search retrieval for efficient candidate retrieval
-  using Vespa's support for [approximate nearest neighbor search](https://docs.vespa.ai/en/approximate-nn-hnsw.html).
-  Illustrated in figure **a**. 
-- Re-ranking using the [Late contextual interaction over BERT (ColBERT)](https://arxiv.org/abs/2004.12832) model
-  This method is illustrated in figure **d**. 
-- Re-ranking using a *cross-encoder* with cross attention between the query and document terms.
-  This method is illustrated in figure **c**.
-- [Multiphase retrieval and ranking](https://docs.vespa.ai/en/phased-ranking.html)
-  combining efficient retrieval (WAND or ANN) with re-ranking stages.
-- Using Vespa [embedder](https://docs.vespa.ai/en/embedding.html) functionality.
-- Hybrid ranking functionality 
-
-
-## Retrieval and Ranking 
-There are several ranking profiles defined in the *passage* document schema. 
+## Retrieval and Ranking
+There are several ranking profiles defined in the *passage* document schema.
 See [vespa ranking documentation](https://docs.vespa.ai/en/ranking.html)
 for an overview of how to represent ranking in Vespa.
 
 ## Quick start
-Make sure to read and agree to the terms and conditions of [MS Marco](https://microsoft.github.io/msmarco/) 
-before downloading the dataset. The following is a quick start recipe for getting started with a tiny slice of 
+Make sure to read and agree to the terms and conditions of [MS Marco](https://microsoft.github.io/msmarco/)
+before downloading the dataset. The following is a quick start recipe for getting started with a tiny slice of
 the ms marco passage ranking dataset.
 
 Requirements:
@@ -60,7 +67,7 @@ Requirements:
 * Alternatively, deploy using [Vespa Cloud](https://cloud.vespa.ai/)
 * Operating system: Linux, macOS, or Windows 10 Pro (Docker requirement)
 * Architecture: x86_64 or arm64
-* [Homebrew](https://brew.sh/) to install [Vespa CLI](https://docs.vespa.ai/en/vespa-cli.html), or download 
+* [Homebrew](https://brew.sh/) to install [Vespa CLI](https://docs.vespa.ai/en/vespa-cli.html), or download
   a vespa-cli release from [GitHub releases](https://github.com/vespa-engine/vespa/releases).
 * python (requests, tqdm, ir_datasets)
 
@@ -68,6 +75,8 @@ Requirements:
 Validate Docker resource settings, which should be a minimum of 6 GB:
 <pre>
 $ docker info | grep "Total Memory"
+or
+$ podman info | grep "memTotal"
 </pre>
 
 Install [Vespa CLI](https://docs.vespa.ai/en/vespa-cli.html):
@@ -75,10 +84,10 @@ Install [Vespa CLI](https://docs.vespa.ai/en/vespa-cli.html):
 $ brew install vespa-cli
 </pre>
 
-Install python dependencies for exporting the passage dataset: 
+Install python dependencies for exporting the passage dataset:
 
 <pre data-test="exec">
-$ pip3 install ir_datasets 
+$ pip3 install ir_datasets
 </pre>
 
 For local deployment using docker image:
@@ -90,7 +99,7 @@ Pull and start the vespa container image:
 <pre data-test="exec">
 $ docker pull vespaengine/vespa
 $ docker run --detach --name vespa --hostname vespa-container \
-  --publish 8080:8080 --publish 19071:19071 \
+  --publish 127.0.0.1:8080:8080 --publish 127.0.0.1:19071:19071 \
   vespaengine/vespa
 </pre>
 
@@ -116,7 +125,7 @@ $ curl -L https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2/raw/main/tokenize
 Deploy the application:
 
 <pre data-test="exec" data-test-assert-contains="Success">
-$ vespa deploy --wait 300 
+$ vespa deploy --wait 300
 </pre>
 
 ## Feeding sample data
@@ -126,25 +135,25 @@ Feed a small sample of data:
 $ vespa feed ext/docs.jsonl
 </pre>
 
-## Query examples 
+## Query examples
 
-For example, do a query for *what was the Manhattan Project*: 
+For example, do a query for *what was the Manhattan Project*:
 
-Note that the `@query` parameter substitution syntax requires Vespa 8.299 or above. 
+Note that the `@query` parameter substitution syntax requires Vespa 8.299 or above.
 
 <pre data-test="exec" data-test-assert-contains='Manhattan'>
 vespa query 'query=what was the manhattan project' \
- 'yql=select * from passage where {targetHits: 100}nearestNeighbor(e5, q)'\
- 'input.query(q)=embed(e5, @query)' \
- 'input.query(qt)=embed(colbert, @query)' \
- 'ranking=e5-colbert' 
+ 'yql=select * from passage where {targetHits: 100}nearestNeighbor(e5_embedding, q)'\
+ 'input.query(q)=embed(e5_embedding_model, @query)' \
+ 'input.query(qt)=embed(colbert_embedding_model, @query)' \
+ 'ranking=e5-colbert'
 </pre>
 
 <pre data-test="exec" data-test-assert-contains='Manhattan'>
 vespa query 'query=what was the manhattan project' \
- 'yql=select * from passage where userQuery() or ({targetHits: 100}nearestNeighbor(e5, q))'\
- 'input.query(q)=embed(e5, @query)' \
- 'input.query(qt)=embed(colbert, @query)' \
+ 'yql=select * from passage where userQuery() or ({targetHits: 100}nearestNeighbor(e5_embedding, q))'\
+ 'input.query(q)=embed(e5_embedding_model, @query)' \
+ 'input.query(qt)=embed(colbert_embedding_model, @query)' \
  'input.query(query_token_ids)=embed(tokenizer, @query)' \
  'ranking=e5-colbert-cross-encoder-rrf'
  </pre>
@@ -159,15 +168,18 @@ $ docker rm -f vespa
 ### Ranking Evaluation using Ms Marco Passage Ranking development queries
 
 With the [evaluate_passage_run.py](python/evaluate_passage_run.py)
-we can run retrieval and ranking using the methods demonstrated. 
+we can run retrieval and ranking using the methods demonstrated.
 
 To do so, we need to index the entire dataset as follows:
+
+**Note** The ir_datasets utility will download MS Marco query evaluation data,
+so the first run will take some time to complete (Upwards of several days to complete on a powerful laptop. Consider running the feeding on a dedicated machine or cloud instance).
+
 <pre>
-ir_datasets export msmarco-passage docs --format jsonl |python3 python/to-vespa-feed.py | vespa feed - 
+ir_datasets export msmarco-passage docs --format jsonl |python3 python/to-vespa-feed.py |vespa feed -
 </pre>
 
-Note that the ir_datasets utility will download MS Marco query evaluation data,
-so the first run will take some time to complete. 
+
 
 **BM25(WAND) Single-phase sparse retrieval**
 <pre>

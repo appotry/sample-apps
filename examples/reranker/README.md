@@ -1,6 +1,10 @@
 <!-- Copyright Vespa.ai. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root. -->
 
-![Vespa logo](https://vespa.ai/assets/vespa-logo-color.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.vespa.ai/logos/Vespa-logo-green-RGB.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg">
+  <img alt="#Vespa" width="200" src="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg" style="margin-bottom: 25px;">
+</picture>
 
 # Reranker sample application
 
@@ -11,7 +15,7 @@ it is useful when you want to quickly do ranking experiments without rewriting a
 ## Usage
 
 1. Make sure the application to rerank has a 
-[token endpoint](https://cloud.vespa.ai/en/security/guide#application-key).
+[token endpoint](https://docs.vespa.ai/en/security/guide#application-key).
 2. `vespa clone examples/reranker`
 3. Add your endpoint to the reranker config in `src/main/application/services.xml`
    and optionally change reranker parameters (these can also be passed in the request).

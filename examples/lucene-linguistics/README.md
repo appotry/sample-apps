@@ -1,19 +1,19 @@
 <!-- Copyright Vespa.ai. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root. -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://vespa.ai/assets/vespa-ai-logo-heather.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://vespa.ai/assets/vespa-ai-logo-rock.svg">
-  <img alt="#Vespa" width="200" src="https://vespa.ai/assets/vespa-ai-logo-rock.svg" style="margin-bottom: 25px;">
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.vespa.ai/logos/Vespa-logo-green-RGB.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg">
+  <img alt="#Vespa" width="200" src="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg" style="margin-bottom: 25px;">
 </picture>
 
 # Vespa LuceneLinguistics Demos
 
 A couple of example of how to get started with the `lucene-linguistics`:
 
-- `non-java`: an absolute minimum to get started;
-- `minimal`: minimal Java based project using Lucene Linguistics;
-- `advanced-configuration`: demonstrates the configurability;
-- `going-crazy`: demonstrates the advanced setup;
+- [basic](basic/README.md): an absolute minimum to get started;
+- [minimal](minimal/README.md): minimal Java based project using Lucene Linguistics;
+- [advanced-configuration](advanced-configuration/README.md): demonstrates the configurability;
+- [going-crazy](going-crazy/README.md): demonstrates the advanced setup;
 
 ## Getting started
 
@@ -26,14 +26,14 @@ go to the application package directory and play with the following commands:
 brew install vespa-cli
 # Maven must be 3.6+
 brew install maven
-
+# Requires Vespa 8.315.19 or later
 docker run --rm --detach \
   --name vespa \
   --hostname vespa-container \
-  --publish 8080:8080 \
-  --publish 19071:19071 \
-  --publish 19050:19050 \
-  vespaengine/vespa:8.237.19
+  --publish 127.0.0.1:8080:8080 \
+  --publish 127.0.0.1:19071:19071 \
+  --publish 127.0.0.1:19050:19050 \
+  vespaengine/vespa
 
 # To observe the logs from LuceneLinguistics run in a separate terminal
 docker logs  vespa -f | grep -i "lucene"

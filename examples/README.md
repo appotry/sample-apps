@@ -2,69 +2,164 @@
 <!-- Copyright Vespa.ai. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root. -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://vespa.ai/assets/vespa-ai-logo-heather.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://vespa.ai/assets/vespa-ai-logo-rock.svg">
-  <img alt="#Vespa" width="200" src="https://vespa.ai/assets/vespa-ai-logo-rock.svg" style="margin-bottom: 25px;">
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.vespa.ai/logos/Vespa-logo-green-RGB.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg">
+  <img alt="#Vespa" width="200" src="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg" style="margin-bottom: 25px;">
 </picture>
 
 # Vespa Code And Operational Examples
 
+### BM25F-inspired cross-field ranking
+[![logo](/assets/vespa-logomark-tiny.png) BM25F-inspired cross-field search](bm25f)
+demonstrates cross-field ranking over title and body by composing BM25F-inspired ranking expressions from per-term and per-field ranking features.
+
+
 ### Vespa grouping and facets for organizing results
-The [part-purchases-demo](part-purchases-demo) app demonstrates Vespa grouping and faceting for query time result analytics. See [Vespa grouping documentation](https://docs.vespa.ai/en/grouping.html).
+[![logo](/assets/vespa-logomark-tiny.png) Grouping Results](part-purchases-demo)
+demonstrates Vespa grouping and faceting for query time result analytics.
+Read more in [Vespa grouping](https://docs.vespa.ai/en/grouping.html).
 
-### Vespa predicate fields
-The [predicate-fields](predicate-fields) demonstrates how to use Vespa's [predicate field](https://docs.vespa.ai/en/predicate-fields.html) type to implement indexing of document side boolean expressions.
-Boolean document side constraints allows the document to specify which type of queries it can be retrieved for. Predicate fields allow expressing logic like _"this document should only be visible in search for readers in age range 20 to 30"_ or _"this product should only be visible in search during campaign hours"_.
 
-### Operations
-See [operations](operations) for sample applications for multinode clusters,
-deployed in various infrastructure like Kubernetes. Also find examples for security and monitoring.
+### Vespa Predicate Fields
+[![logo](/assets/vespa-logomark-tiny.png) predicate-fields](predicate-fields)
+uses Vespa's [predicate field](https://docs.vespa.ai/en/predicate-fields.html) type to implement indexing of document side boolean expressions.
+Boolean document side constraints allows the document to specify which type of queries it can be retrieved for.
+Predicate fields allow expressing logic like _"this document should only be visible in search for readers in age range 20 to 30"_ or
+_"this product should only be visible in search during campaign hours"_.
+
 
 ### Vespa custom linguistics Integration
-The [vespa-chinese-linguistics](vespa-chinese-linguistics) app
+The [![logo](/assets/vespa-logomark-tiny.png) vespa-chinese-linguistics](vespa-chinese-linguistics) app
 demonstrates integrating custom linguistic processing,
 in this case a Chinese tokenizer [Jieba](https://github.com/fxsjy/jieba).
 
+
+### Vespa linguistics for Asian-language markets
+[![logo](/assets/vespa-logomark-tiny.png) linguistics-asia](linguistics-asia) compares
+the available ways to wire Chinese text processing into Vespa — OpenNLP CJK, Lucene
+analyzer chains (per-variant and cross-variant via ICU), Jieba bundle reuse, gram
+fallback, custom OpenNLP-extends Linguistics (ICU4J / OpenCC4j), and a custom
+Lucene `TokenFilterFactory` for phrase dictionaries (CKIP / HanLP / IK).
+Eight runnable sub-applications over one shared dataset and query set so the
+trade-offs are observable, not theoretical. Each sub-example has a trilingual
+README (English / 简体中文 / 繁體中文).
+
+
 ### Vespa custom HTTP api using request handlers and processors
-The [http-api-using-request-handlers-and-processors](http-api-using-request-handlers-and-processors)
+[![logo](/assets/vespa-logomark-tiny.png) http-api-using-request-handlers-and-processors](http-api-using-request-handlers-and-processors)
 demonstrates how to build custom HTTP apis, building REST interfaces with custom handlers and renderers.
 See also [Custom HTTP Api tutorial](https://docs.vespa.ai/en/jdisc/http-api-tutorial.html).
 
+
 ### Vespa container plugins with multiple OSGI bundles
-[multiple-bundles](multiple-bundles) is a technical sample application demonstrating how to use multiple OSGI bundles for custom plugins (searchers, handlers, renderers).
+[![logo](/assets/vespa-logomark-tiny.png) multiple-bundles](multiple-bundles) is a technical sample application
+demonstrating how to use multiple OSGI bundles for custom plugins (searchers, handlers, renderers).
+
 
 ### Distributed joins 
-[Joins](joins) shows possibilities for doing distributed query time joins.
+[![logo](/assets/vespa-logomark-tiny.png) Joins](joins) shows possibilities for doing distributed query time joins.
 This is for use cases where [parent-child](https://docs.vespa.ai/en/parent-child.html) is not sufficient. 
 
-### [Document processing]
-[Document-processing](document-processing)builds on album-recommendation to show
+
+### Document processing
+[![logo](/assets/vespa-logomark-tiny.png) Document-processing](document-processing)builds on
+[album-recommendation](/album-recommendation) to show
 some of the possibilities for doing custom document processing in Java.
 
+
 ### Generic request processing
-[generic-request-processing](generic-request-processing)
+[![logo](/assets/vespa-logomark-tiny.png) generic-request-processing](generic-request-processing)
 Generic [request-response](https://docs.vespa.ai/en/jdisc/processing.html) processing sample application.
 <!-- ToDo: FIXME -->
 
 
 ### Lucene Linguistics
-The [lucene-linguistics](lucene-linguistics) contains two sample application packages:
+[![logo](/assets/vespa-logomark-tiny.png) lucene-linguistics](lucene-linguistics) contains two sample application packages:
 1. A bare minimal app.
 2. Shows advanced configuration of the Lucene based `Linguistics` implementation.
 
+
+### Lambda functions in AWS and Google Cloud
+[![logo](/assets/vespa-logomark-tiny.png) aws/lambda](aws/lambda) and
+[![logo](/assets/vespa-logomark-tiny.png) google-cloud/cloud-functions](google-cloud/cloud-functions)
+have examples of (lambda) functions for accessing data and logs with the cloud providers.
+
+
+### Automatic data generation for training embedders using LLMs
+[![logo](/assets/vespa-logomark-tiny.png) embedder-auto-training-evaluation](embedder-auto-training-evaluation) does
+automatic data generation using the ChatGPT API.
+This in order to train an embedder to perform better for information retrieval on specific datasets
+without labor-intensive and expensive manual training data annotation.
+
+Machine learned embedder models enable efficient similarity computations,
+but training these models requires large amounts of (often manually) annotated data.
+The aim of this app is to investigate whether Large Language Models (LLMs),
+such as GPT-3.5-turbo, can be employed to generate synthetic data for training embedder,
+without extensive manual intervention.
+
+The repository contains scripts and notebooks to:
+* Prepare datasets
+* Generate training data for datasets using an LLM
+* Train an embedder
+* Evaluate performance
+
+Read more in the [blog post](https://blog.vespa.ai/summer-internship-2023/#automatic-embedder-training-with-an-llm).
+
+
+### Embedding service (WORK IN PROGRESS)
+[![logo](/assets/vespa-logomark-tiny.png) embedding-service](embedding-service)
+demonstrates how a Java handler component can be used to process HTTP requests.
+In this application, a handler is used to implement an embedding service,
+which takes a string as an input and returns a vector embedding of that string.
+
+
+### ONNX Model export and deployment example
+Use [![logo](/assets/vespa-logomark-tiny.png) model-deployment](model-deployment) to generate a model in ONNX format in the models directory,
+by running the ONNXModelExport notebook.
+<!-- ToDo: improve this -->
+
+
+### Model exporting
+[![logo](/assets/vespa-logomark-tiny.png) Model exporting](model-exporting)
+demonstrates how to export a Huggingface sentence-transformer model to ONNX format.
+
+
+### Reranker sample application
+[![logo](/assets/vespa-logomark-tiny.png) reranker](reranker) is a stateless application which re-ranks results obtained from another Vespa application.
+While this does not result in good performance and is not recommended for production,
+it is useful when you want to quickly do ranking experiments without rewriting application data.
+
+
+### Categorize using an LLM
+[![logo](/assets/vespa-logomark-tiny.png) In-Context Learning](in-context-learning) This is a set of scripts/installs to back up the presentation using In-Context Learning at:
+* [MLCon](https://mlconference.ai/machine-learning-advanced-development/adaptive-incontext-learning/)
+* [data science connect COLLIDE](https://datasciconnect.com/events/collide/agenda/)
+
+### Agentic Chatbot using Vespa
+
+[![logo](/assets/vespa-logomark-tiny.png) agentic-streamlit-chatbot](agentic-streamlit-chatbot/simple_app) This simple Streamlit application demonstrates how to use [LangGraph](https://www.langchain.com/langgraph) agentic framework to develop an E-commerce chatbot using Vespa as a retrieval tool.
+
+[![logo](/assets/vespa-logomark-tiny.png) agentic-streamlit-chatbot](agentic-streamlit-chatbot/advanced_app) This Streamlit application shows a more advanced example on how to use [LangGraph](https://www.langchain.com/langgraph) agentic framework to develop an E-commerce chatbot enabling a conversational search with human in the loop feedback with yql query generation using Vespa query builder.
+
+For any questions, please register at the Vespa Slack and discuss in the general channel.
+
+### Job matching app with MCP Server
+
+[![logo](/assets/vespa-logomark-tiny.png) mcp-server-app](mcp-server-app) This simple sample app combines a job matching platform with an integrated MCP server.
+
+### RAG with AWS Bedrock hosted LLM Models
+
+[![logo](/assets/vespa-logomark-tiny.png) aws-simple-rag](aws-simple-rag) This simple RAG application is a flavor of [Retrieval Augmented Generation (RAG) in Vespa](../retrieval-augmented-generation) where the RAG application runs in Vespa but leveraging LLMs hosted in AWS Bedrock through OpenAI API to generate a final response.
+
 ----
+
+### Operations
+See [operations](operations) for sample applications for multinode clusters,
+deployed in various infrastructure like Kubernetes.
+Also find examples for CI/CD, security and monitoring.
+
 
 Note: Applications with _pom.xml_ are Java/Maven projects and must be built before being deployed.
 Refer to the [Developer Guide](https://docs.vespa.ai/en/developer-guide.html) for more information.
 
 [Contribute](https://github.com/vespa-engine/vespa/blob/master/CONTRIBUTING.md) to the Vespa sample applications.
-
-----
-
-[![Vespa Sampleapps Search Feed](https://github.com/vespa-engine/sample-apps/actions/workflows/feed.yml/badge.svg)](https://github.com/vespa-engine/sample-apps/actions/workflows/feed.yml)
-
-[![sample-apps link checker](https://api.screwdriver.cd/v4/pipelines/7038/link-checker-sample-apps/badge)](https://cd.screwdriver.cd/pipelines/7038/)
-
-[![sample-apps build](https://api.screwdriver.cd/v4/pipelines/7038/build-apps/badge)](https://cd.screwdriver.cd/pipelines/7038/)
-
-[![sample-apps verify-guides](https://api.screwdriver.cd/v4/pipelines/7038/verify-guides/badge)](https://cd.screwdriver.cd/pipelines/7038/)

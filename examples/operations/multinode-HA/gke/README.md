@@ -2,9 +2,9 @@
 <!-- Copyright Vespa.ai. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root. -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://vespa.ai/assets/vespa-ai-logo-heather.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://vespa.ai/assets/vespa-ai-logo-rock.svg">
-  <img alt="#Vespa" width="200" src="https://vespa.ai/assets/vespa-ai-logo-rock.svg" style="margin-bottom: 25px;">
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.vespa.ai/logos/Vespa-logo-green-RGB.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg">
+  <img alt="#Vespa" width="200" src="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg" style="margin-bottom: 25px;">
 </picture>
 
 # Multinode-HA using Google Cloud Kubernetes Engine - GKE
@@ -21,7 +21,7 @@ Prerequisites:
 
 The guide uses port-forwards to access ports in the application -
 set up these forwards in separate terminal windows.
-See [config/service-feed.yml](config/service-feed.yml) and [config/service-feed.yml](config/service-query.yml)
+See [config/service-feed.yml](config/service-feed.yml) and [config/service-query.yml](config/service-query.yml)
 for setting up LoadBalancers.
 
 Get started:
@@ -48,7 +48,7 @@ gcloud container clusters create vespa \
   --num-nodes=3 \
   --machine-type=n1-standard-2 \
   --disk-size=20
-  
+
 gcloud container clusters get-credentials vespa
 ```
 This is a minimum-configuration to start the multinode-HA application on GKE.
@@ -207,7 +207,7 @@ Feed data to the feed endpoint:
 kubectl port-forward svc/vespa-feed 8080
 ```
 ```
-i=0; (for doc in $(ls ../../../../album-recommendation/ext/*.json); \
+i=0; (for doc in $(ls ../../../../album-recommendation/dataset/*.json); \
   do \
     curl -H Content-Type:application/json -d @$doc \
     http://localhost:8080/document/v1/mynamespace/music/docid/$i; \

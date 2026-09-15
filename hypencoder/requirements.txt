@@ -1,0 +1,9 @@
+# Python dependencies for encode_query.py, which only tokenises the query text.
+#
+# Install with:    pip install -r requirements.txt
+# Or with uv:      uv pip install -r requirements.txt
+#
+# The ONNX models are downloaded pre-built; see README.md.
+
+numpy
+tokenizers

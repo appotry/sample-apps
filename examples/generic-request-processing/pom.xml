@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <test.hide>true</test.hide>
         <junit.version>5.10.1</junit.version>
-        <vespa_version>8.388.11</vespa_version>
+        <vespa_version>8.751.13</vespa_version>
     </properties>
 
     <dependencies>
@@ -45,7 +45,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.12.1</version>
                 <configuration>
-                    <optimize>true</optimize>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                     <release>11</release>

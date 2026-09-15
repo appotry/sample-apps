@@ -1,10 +1,10 @@
 
-<!-- Copyright Yahoo. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root. -->
+<!-- Copyright Vespa.ai. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root. -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://vespa.ai/assets/vespa-ai-logo-heather.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://vespa.ai/assets/vespa-ai-logo-rock.svg">
-  <img alt="#Vespa" width="200" src="https://vespa.ai/assets/vespa-ai-logo-rock.svg" style="margin-bottom: 25px;">
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.vespa.ai/logos/Vespa-logo-green-RGB.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg">
+  <img alt="#Vespa" width="200" src="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg" style="margin-bottom: 25px;">
 </picture>
 
 # Vespa sample applications - Long-Context ColBERT
@@ -23,7 +23,7 @@ Requires at least Vespa 8.311.28
 
 ## To try this application
 
-Follow [Vespa getting started](https://cloud.vespa.ai/en/getting-started)
+Follow [Vespa getting started](https://docs.vespa.ai/en/basics/deploy-an-application)
 through the <code>vespa deploy</code> step, cloning `colbert-long` instead of `album-recommendation`.
 
 Feed documents (this includes embed inference in Vespa):
@@ -91,7 +91,7 @@ trec_eval -mndcg_cut.10 ext/test_en_qrels.tsv colbert-max-sim-context-level.run
 
 ## Terminate
 Remove the container after use (Only relevant for our automatic testing of this sample app)
-<pre data-test="exec">
+<pre data-test="after">
 $ docker rm -f vespa
 </pre>
 

@@ -1,10 +1,9 @@
-
 <!-- Copyright Vespa.ai. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root. -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://vespa.ai/assets/vespa-ai-logo-heather.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://vespa.ai/assets/vespa-ai-logo-rock.svg">
-  <img alt="#Vespa" width="200" src="https://vespa.ai/assets/vespa-ai-logo-rock.svg" style="margin-bottom: 25px;">
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.vespa.ai/logos/Vespa-logo-green-RGB.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg">
+  <img alt="#Vespa" width="200" src="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg" style="margin-bottom: 25px;">
 </picture>
 
 # Vespa sample applications - Multiple bundles
@@ -27,6 +26,8 @@ Refer to [Docker memory](https://docs.vespa.ai/en/operations-selfhosted/docker-c
 for details and troubleshooting:
 <pre>
 $ docker info | grep "Total Memory"
+or
+$ podman info | grep "memTotal"
 </pre>
 
 **Check-out, compile and run:**
@@ -43,7 +44,7 @@ $ (cd sample-apps/examples/multiple-bundles-lib &amp;&amp; mvn clean install)
 <pre data-test="exec">
 $ cd sample-apps/examples/multiple-bundles &amp;&amp; mvn clean verify
 $ docker run --detach --name vespa --hostname vespa-container \
-  --publish 8080:8080 --publish 19071:19071 \
+  --publish 127.0.0.1:8080:8080 --publish 127.0.0.1:19071:19071 \
   vespaengine/vespa
 </pre>
 

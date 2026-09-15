@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<services version="1.0" xmlns:deploy="vespa" xmlns:preprocess="properties">
+    <container id="default" version="1.0">
+        <document-api/>
+        <search/>
+        <component id="com.yahoo.search.mcp.McpSearchSpecProvider" bundle="container-search-and-docproc"/>
+        <handler id="ai.vespa.mcp.McpRequestHandler" bundle="container-disc">
+            <binding>http://*/mcp/*</binding>
+        </handler>
+        <nodes>
+            <node hostalias="node1"/>
+        </nodes>
+    </container>
+    <content id="content" version="1.0">
+        <min-redundancy>1</min-redundancy>
+        
+        <documents>
+            <document type="candidate" mode="index" />
+            <document type="job" mode="index" />
+        </documents>
+        <nodes>
+            <node hostalias="node1" distribution-key="0"/>
+        </nodes>
+    </content>
+</services>

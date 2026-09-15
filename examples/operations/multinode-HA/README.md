@@ -1,10 +1,9 @@
-
 <!-- Copyright Vespa.ai. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root. -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://vespa.ai/assets/vespa-ai-logo-heather.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://vespa.ai/assets/vespa-ai-logo-rock.svg">
-  <img alt="#Vespa" width="200" src="https://vespa.ai/assets/vespa-ai-logo-rock.svg" style="margin-bottom: 25px;">
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.vespa.ai/logos/Vespa-logo-green-RGB.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg">
+  <img alt="#Vespa" width="200" src="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg" style="margin-bottom: 25px;">
 </picture>
 
 
@@ -20,7 +19,7 @@ The second part secures the application using [mTLS](https://docs.vespa.ai/en/mt
 
 A sample [docker-compose.yaml](docker-compose.yaml) is provided, refer to [Docker Compose](#docker-compose).
 
-**Troubleshooting:** The [troubleshooting-startup-multinode](https://vespa.ai/resources#troubleshooting-startup-multinode)
+**Troubleshooting:** The [troubleshooting-startup-multinode](https://www.youtube.com/embed/BG7XZmXpIzo)
 training video goes through various issues to help set up a multinode cluster.
 See this if getting problems during the procedures below.
 
@@ -53,8 +52,10 @@ Also see [troubleshooting](/examples/operations/README.md#troubleshooting).
 ## Memory usage
 This guide is tested with Docker using 12G Memory:
 
-<pre data-test="exec">
+<pre>
 $ docker info | grep "Total Memory"
+or
+$ podman info | grep "memTotal"
 </pre>
 
 Note that this guide is configured for minimum memory use for easier testing, adding:
@@ -189,11 +190,11 @@ Checking logs:
 
       WARNING : config-sentinel  sentinel.sentinel.connectivity	Only 4 of 10 nodes are up and OK, 40.0% (min is 50%)
 
-**Important note:**
+**Note:**
 This is the [startup sequence](https://docs.vespa.ai/en/operations-selfhosted/config-sentinel.html#cluster-startup) kicking in -
-container and content nodes are not started before 50% (configurable) of nodes have started.
-Meaning, here we have started only 4/10, so `logserver`, `slobrok`, `metrics-proxy` and `cluster-controller`
-are not started yet.
+services are not started before 50% of all nodes are up and have connectivity to other nodes. Here only 4 of 10 nodes are up,
+so the services on these 4 nodes (`logserver`, `slobrok`, `metrics-proxy` and `cluster-controller`)
+are not started yet. At least one more node need to be started before the services themselves are started.
 
 
 
@@ -262,13 +263,13 @@ slobrok
 storagenode
 
 $ docker exec -it node0 /opt/vespa/bin/vespa-model-inspect service container
-container @ node4.vespanet : 
+container @ node4.vespanet :
 default/container.0
     tcp/node4.vespanet:8080 (STATE EXTERNAL QUERY HTTP)
     tcp/node4.vespanet:19100 (EXTERNAL HTTP)
     tcp/node4.vespanet:19101 (MESSAGING RPC)
     tcp/node4.vespanet:19102 (ADMIN RPC)
-container @ node5.vespanet : 
+container @ node5.vespanet :
 default/container.1
     tcp/node5.vespanet:8080 (STATE EXTERNAL QUERY HTTP)
     tcp/node5.vespanet:19100 (EXTERNAL HTTP)
@@ -454,7 +455,7 @@ Notes:
 * See [slobrok](https://docs.vespa.ai/en/slobrok.html) for the Vespa naming service
 * The [cluster controller](https://docs.vespa.ai/en/content/content-nodes.html#cluster-controller) cluster
   manages the system state, and is useful in debugging cluster failures.
-* The [metrics proxy](https://docs.vespa.ai/en/reference/metrics.html) is used to aggregate metrics 
+* The [metrics proxy](https://docs.vespa.ai/en/reference/metrics.html) is used to aggregate metrics
   from all processes on a node, serving on _http://node:19092/metrics/v1/values_
 
 
@@ -462,7 +463,7 @@ Notes:
 ## Test feed and query endpoints
 Feed 5 documents, using the document-API endpoint in the _feed_ container cluster, here mapped to 8080/8081:
 <pre data-test="exec">
-$ i=0; (for doc in $(ls ../../../album-recommendation/ext/*.json); \
+$ i=0; (for doc in $(ls ../../../album-recommendation/dataset/*.json); \
   do \
     curl -H Content-Type:application/json -d @$doc \
     http://localhost:8080/document/v1/mynamespace/music/docid/$i; \
@@ -744,7 +745,7 @@ export VESPA_CLI_DATA_PLANE_KEY_FILE=pki/client/client.key
 ```
 Feed documents:
 ```
-vespa feed -t https://localhost:8443 ../../../album-recommendation/ext/documents.jsonl 
+vespa feed -t https://localhost:8443 ../../../album-recommendation/dataset/documents.jsonl
 ```
 Visit documents:
 ```
@@ -761,7 +762,7 @@ Note that the _feed_ and _query_ container cluster nodes are mapped to 8443 and 
 ## Test feed and query endpoints using curl
 Feed 5 documents, using the document-API endpoint in the _feed_ container cluster, here mapped to 8080/8081:
 <pre data-test="exec">
-$ i=0; (for doc in $(ls ../../../album-recommendation/ext/*.json); do \
+$ i=0; (for doc in $(ls ../../../album-recommendation/dataset/*.json); do \
     curl -s --key pki/client/client.key --cert pki/client/client.pem --cacert pki/vespa/ca-vespa.pem \
       -H Content-Type:application/json -d @$doc \
       https://localhost:8443/document/v1/mynamespace/music/docid/$i; \
@@ -873,32 +874,32 @@ Normal deploy output in this guide, as the service nodes are not started yet:
 Ports mapped in this guide:
 ```sh
 $ netstat -an | egrep '1907[1,2,3]|1905[0,1,2]|19098|2009[2,3,4,5,6,7,8,9]|2010[0,1]|1910[0,1,2]|808[0,1,2,3]|1910[7,8]' | sort
-tcp46      0      0  *.19050                *.*                    LISTEN     
-tcp46      0      0  *.19051                *.*                    LISTEN     
-tcp46      0      0  *.19052                *.*                    LISTEN     
-tcp46      0      0  *.19071                *.*                    LISTEN     
-tcp46      0      0  *.19072                *.*                    LISTEN     
-tcp46      0      0  *.19073                *.*                    LISTEN     
-tcp46      0      0  *.19098                *.*                    LISTEN 
-tcp46      0      0  *.19100                *.*                    LISTEN     
-tcp46      0      0  *.19101                *.*                    LISTEN     
-tcp46      0      0  *.19102                *.*                    LISTEN     
-tcp46      0      0  *.19107                *.*                    LISTEN     
+tcp46      0      0  *.19050                *.*                    LISTEN
+tcp46      0      0  *.19051                *.*                    LISTEN
+tcp46      0      0  *.19052                *.*                    LISTEN
+tcp46      0      0  *.19071                *.*                    LISTEN
+tcp46      0      0  *.19072                *.*                    LISTEN
+tcp46      0      0  *.19073                *.*                    LISTEN
+tcp46      0      0  *.19098                *.*                    LISTEN
+tcp46      0      0  *.19100                *.*                    LISTEN
+tcp46      0      0  *.19101                *.*                    LISTEN
+tcp46      0      0  *.19102                *.*                    LISTEN
+tcp46      0      0  *.19107                *.*                    LISTEN
 tcp46      0      0  *.19108                *.*                    LISTEN
-tcp46      0      0  *.20092                *.*                    LISTEN     
-tcp46      0      0  *.20093                *.*                    LISTEN     
-tcp46      0      0  *.20094                *.*                    LISTEN     
-tcp46      0      0  *.20095                *.*                    LISTEN     
-tcp46      0      0  *.20096                *.*                    LISTEN     
-tcp46      0      0  *.20097                *.*                    LISTEN     
-tcp46      0      0  *.20098                *.*                    LISTEN     
-tcp46      0      0  *.20099                *.*                    LISTEN     
-tcp46      0      0  *.20100                *.*                    LISTEN     
-tcp46      0      0  *.20101                *.*                    LISTEN     
-tcp46      0      0  *.8080                 *.*                    LISTEN     
-tcp46      0      0  *.8081                 *.*                    LISTEN     
-tcp46      0      0  *.8082                 *.*                    LISTEN     
-tcp46      0      0  *.8083                 *.*                    LISTEN     
+tcp46      0      0  *.20092                *.*                    LISTEN
+tcp46      0      0  *.20093                *.*                    LISTEN
+tcp46      0      0  *.20094                *.*                    LISTEN
+tcp46      0      0  *.20095                *.*                    LISTEN
+tcp46      0      0  *.20096                *.*                    LISTEN
+tcp46      0      0  *.20097                *.*                    LISTEN
+tcp46      0      0  *.20098                *.*                    LISTEN
+tcp46      0      0  *.20099                *.*                    LISTEN
+tcp46      0      0  *.20100                *.*                    LISTEN
+tcp46      0      0  *.20101                *.*                    LISTEN
+tcp46      0      0  *.8080                 *.*                    LISTEN
+tcp46      0      0  *.8081                 *.*                    LISTEN
+tcp46      0      0  *.8082                 *.*                    LISTEN
+tcp46      0      0  *.8083                 *.*                    LISTEN
 ```
 
 ## Clean up after testing

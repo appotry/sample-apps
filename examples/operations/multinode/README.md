@@ -2,9 +2,9 @@
 <!-- Copyright Vespa.ai. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root. -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://vespa.ai/assets/vespa-ai-logo-heather.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://vespa.ai/assets/vespa-ai-logo-rock.svg">
-  <img alt="#Vespa" width="200" src="https://vespa.ai/assets/vespa-ai-logo-rock.svg" style="margin-bottom: 25px;">
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.vespa.ai/logos/Vespa-logo-green-RGB.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg">
+  <img alt="#Vespa" width="200" src="https://assets.vespa.ai/logos/Vespa-logo-dark-RGB.svg" style="margin-bottom: 25px;">
 </picture>
 
 # Multinode testing and observability
@@ -36,7 +36,7 @@ Note that this guide is configured for minimum memory use for easier testing, ad
     -e VESPA_CONFIGSERVER_JVMARGS="-Xms32M -Xmx128M" \
     -e VESPA_CONFIGPROXY_JVMARGS="-Xms32M -Xmx32M" \
 
-to `docker run` commands. For real production use cases, do not do this.
+to `docker run` commands. For real production use cases, do not reduce the defaults like this.
 Also remove annotated memory-settings in [services.xml](services.xml).
 
 
@@ -148,9 +148,9 @@ Check that this works:
 $ curl http://localhost:19050/clustercontroller-status/v1/music
 </pre>
 Then open these in a browser:
-* http://localhost:19050/clustercontroller-status/v1/music 
-* http://localhost:19051/clustercontroller-status/v1/music 
-* http://localhost:19052/clustercontroller-status/v1/music 
+* http://localhost:19050/clustercontroller-status/v1/music
+* http://localhost:19051/clustercontroller-status/v1/music
+* http://localhost:19052/clustercontroller-status/v1/music
 
 0 is normally master, 1 is next (and hence has an overview table), 2 is cold.
 
@@ -246,7 +246,7 @@ see [troubleshooting](/examples/operations/README.md#troubleshooting).
 ## Feed data, check distribution
 Make sure the three nodes are started and up - then feed 5 documents:
 <pre data-test="exec" data-test-wait-for="id:mynamespace:music::4">
-$ i=0; (for doc in $(ls ../../../album-recommendation/ext/*.json); \
+$ i=0; (for doc in $(ls ../../../album-recommendation/dataset/*.json); \
     do \
       curl -H Content-Type:application/json -d @$doc \
       http://localhost:8080/document/v1/mynamespace/music/docid/$i; \

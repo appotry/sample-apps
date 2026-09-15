@@ -9,21 +9,27 @@
   <artifactId>vespa-lucene-linguistics-crazy</artifactId>
   <version>0.0.2</version>
   <packaging>container-plugin</packaging>
+
+  <parent>
+    <groupId>com.yahoo.vespa</groupId>
+    <artifactId>cloud-tenant-base</artifactId>
+    <version>[8,9)</version>  <!-- Use the latest Vespa release on each build -->
+    <relativePath/>
+  </parent>
+
   <properties>
     <bundle-plugin.failOnWarnings>false</bundle-plugin.failOnWarnings>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <test.hide>true</test.hide>
-    <vespa_version>8.388.11</vespa_version>
-    <junit.version>5.10.1</junit.version>
-    <lucene.version>9.8.0</lucene.version>
+    <test.hide>false</test.hide>
+    <lucene.version>${lucene.vespa.version}</lucene.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>com.yahoo.vespa</groupId>
       <artifactId>lucene-linguistics</artifactId>
-      <version>${vespa_version}</version>
-      <scope>provided</scope>
+      <version>${vespaversion}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
@@ -39,6 +45,12 @@
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-analysis-opennlp</artifactId>
       <version>${lucene.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
@@ -59,55 +71,28 @@
     <dependency>
       <groupId>com.yahoo.vespa</groupId>
       <artifactId>linguistics</artifactId>
-      <version>${vespa_version}</version>
+      <version>${vespaversion}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.yahoo.vespa</groupId>
       <artifactId>application</artifactId>
-      <version>${vespa_version}</version>
+      <version>${vespaversion}</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>com.yahoo.vespa</groupId>
-        <artifactId>bundle-plugin</artifactId>
-        <version>${vespa_version}</version>
-        <extensions>true</extensions>
-        <configuration>
-          <failOnWarnings>false</failOnWarnings>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>com.yahoo.vespa</groupId>
-        <artifactId>vespa-application-maven-plugin</artifactId>
-        <version>${vespa_version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>packageApplication</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.12.1</version>
-        <configuration>
-          <source>17</source>
-          <target>17</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+  <!-- lucene-analysis-opennlp pulls opennlp-tools 1.9.4; pinned forward to clear
+       CVE-2026-40682/-42027/-42440 (fixed in 2.5.9) and CVE-2026-82617 (ReDoS in
+       RegexNameFinderFactory, fixed in 2.5.12) - see VESPANG-3395. -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.opennlp</groupId>
+        <artifactId>opennlp-tools</artifactId>
+        <version>2.5.12</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
 </project>
